@@ -1,0 +1,11 @@
+package org.consensus.config.test;
+
+import org.consensus.config.handlers.Translator;
+
+public class TranslatorTest{
+    public static void main(String[] args) {
+        Translator t= new Translator();
+        
+        t.genScript();
+    }
+}

@@ -1,0 +1,27 @@
+package org.consensus.config.test;
+
+import org.consensus.config.handlers.Config;
+import org.consensus.config.handlers.ConfigurationHandler;
+
+public class ConfigurationTest{
+	public static void main(String[] args) {
+		ConfigurationHandler confighandler=new ConfigurationHandler();
+		
+		confighandler.init();
+		confighandler.set_basic();
+		confighandler.set_compiler();
+		confighandler.set_solver();
+		confighandler.set_button();
+        
+        
+		confighandler.shell.open();
+        
+        
+        while (!confighandler.shell.isDisposed()) {
+            if (!confighandler.display.readAndDispatch()) {
+            	confighandler.display.sleep();
+            }
+        }
+        confighandler.display.dispose();
+	}
+}

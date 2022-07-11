@@ -1,0 +1,17 @@
+package org.consensus.config.test;
+
+import org.consensus.config.handlers.Solver;
+import org.consensus.config.handlers.Translator;
+
+public class SolveTest{
+    public static void main(String[] args) {
+        Solver t= new Solver();
+        
+        try {
+			t.gen(true,true,true,true,true,true,3,5,"D:\\Lastvoting\\LastVoting.ho","D:\\Lastvoting\\Output","D:\\Lastvoting");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+}

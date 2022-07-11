@@ -1,0 +1,136 @@
+grammar org.consensus.homodel.HOModel with org.eclipse.xtext.common.Terminals
+
+generate hOModel "http://www.consensus.org/homodel/HOModel"
+
+Algorithm:
+	'Algorithm' name=ID ';'
+	variabledeclaration=VarialbeDeclaration
+	domain=Domain?
+	roundlist=RoundList
+	inv=Invariant?
+	uv=Univalence?
+;
+
+VarialbeDeclaration:
+	'Variable' (list+=VariableDecList)+
+;
+VariableDecList:
+	'hidden'? type=Type variablenamelist=VariableNameList ';'
+;
+
+VariableNameList:
+	name+=ID ('=' value+=INITIAL_CONST)? (','name+=ID ('=' value+=INITIAL_CONST)?)*
+;
+
+Domain:
+	'Domain' '{'
+		StatementList
+	'}' ';'
+;
+RoundList:
+	(round+=Round ';')+
+;
+Round:
+	'Round' '{'
+	'SendPart' send=SendPart ';'
+	'TransitionPart' transition=TransitionPart
+	'}'
+;
+
+SendPart:
+	'if' '(' exp=Expression ')' 'send' '(' message1=Message ',' ('All' | 'Coord') ')'
+             ( 'else'  'send'  '('message2=Message ',' ('All' | 'Coord') ')' )? | 
+             'send' '(' message=Message ',' ('All' | 'Coord') ')' 
+;
+
+Message:
+	 {Message} ('<'  ( msg+=ID | 'Coord')  ( ',' ( msg+=ID | 'Coord') )* '>') |
+     {Message} '<' 'ack' '>' 
+ ; 
+
+TransitionPart:
+	StatementList
+;
+Invariant:
+	'Invariant' '{' 
+	StatementList  
+	'}' ';' 
+;
+Univalence:
+	'Univalence' '{' 
+	StatementList  
+	'}' ';' 
+;
+
+StatementList:
+	{StatementList} ( statements+=Statement ';')*
+;
+
+Statement:
+	Assignment |
+    Decision |
+    'for'  '[' var+=Variable  '='  exp+=Expression  'to' exp+=Expression  ']' statement+=Statement |
+    'if' '(' exp+=Expression ')'  statement+=Statement  ( 'else'  statement+=Statement )? |
+    'assume' '(' Expression ')' |
+    'assert' '(' Expression ')' |
+    '{' StatementList '}' 
+;
+
+Assignment:
+	var+=Variable '=' exp+=Expression
+;
+
+Variable:
+	NormalVariable|ArrayVariable
+;
+
+NormalVariable:
+	name=ID
+;
+ArrayVariable:
+	name=ID '['exp+=Expression']'
+;
+Decision:
+	'DECIDE' '(' Expression ')'
+;
+Expression:
+	exp+=ConjunctiveExpression ('||' exp+=ConjunctiveExpression)*
+;
+ConjunctiveExpression:
+	exp+=EqualityExpression ('&&' exp+=EqualityExpression)*
+;
+EqualityExpression:
+	exp+=RelationalExpression (('=='|'!=') exp+=RelationalExpression)?
+;
+RelationalExpression:
+	exp+=SimpleExpression (('<'|'<='|'>'|'>=') exp+=SimpleExpression)?
+; 
+SimpleExpression:
+	term+=Term (('+'|'-') term+=Term)*
+;
+Term:
+	factor+=Factor (('*'|'/') factor+=Factor)*
+;
+Factor:
+	Variable|
+	{Factor} CONSTANT|
+	{Factor} 'isCoord'|
+	{Factor} 'Coord'|
+	 ('rcv' '[' exp+=Expression ']''.'var+=Variable)|
+	'('exp+=Expression')'
+;
+SIMPLE_CONSTANT:
+	'?' | 'false' | 'true' |'EMPTY' | 'pid' | NUMBER
+; 
+INITIAL_CONST:
+	SIMPLE_CONSTANT|'Vp'
+;
+CONSTANT:
+	'N' | 'T' |  'E' |  'a'| 'SIZE' |  'SSIZE' | 'ASIZE' | 'NULL' |  'phase' | 'DECISION' |SIMPLE_CONSTANT 
+;
+terminal NUMBER:
+	'0'|('1'..'9')('0'..'9')*
+;
+Type:
+	'V' | "V\'" | 'TS' | 'VArray' | 'TSArray' |'bool' | 'int' | 'intArray'
+;

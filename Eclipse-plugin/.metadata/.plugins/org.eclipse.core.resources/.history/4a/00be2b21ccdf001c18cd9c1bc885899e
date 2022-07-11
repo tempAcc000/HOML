@@ -1,0 +1,45 @@
+package org.consensus.config.handlers;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.consensus.config.handlers.Config;
+
+public class Translator {
+    Config config=Config.getConfig();
+
+    public void run(){
+        Runtime run =Runtime.getRuntime();
+        try {
+            Process p = run.exec("wsl translator -b -n 3 -i /mnt/d/LastVoting/LastVoting.ho /mnt/d/LastVoting/Output/i3.smt2");
+            InputStream ins= p.getInputStream();
+            new Thread(new inputStreamThread(ins)).start();
+            p.waitFor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    class inputStreamThread implements Runnable{
+        private InputStream ins = null;
+        private BufferedReader bfr = null;
+        public inputStreamThread(InputStream ins){
+            this.ins = ins;
+            this.bfr = new BufferedReader(new InputStreamReader(ins));
+        }
+        @Override
+        public void run() {
+            String line = null;
+            try {
+                while((line = bfr.readLine()) != null){
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

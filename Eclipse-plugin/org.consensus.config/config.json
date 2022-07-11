@@ -1,0 +1,1 @@
+{"Config_path":"","Compiler":{"gen_univalence":true,"node_num_MAX":8,"gen_SAT":true,"gen_invariant":true,"node_num_MIN":3,"gen_agreement":true,"gen_SMT_bv":true,"gen_SMT":true},"Solver":{"SAT_solver":"Glucose","Solver_mode":"SAT-Parallel","SMT_solver":"Z3","Divide_level":4,"Conquer_num":16},"Output_path":"","HO_file":""}

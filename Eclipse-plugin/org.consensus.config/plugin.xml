@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.consensus.config.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="org.consensus.config.commands.category"
+            name="Sample Command"
+            id="org.consensus.config.commands.sampleCommand">
+      </command>
+      <command
+            categoryId="org.consensus.config.commands.category"
+            id="org.consensus.config.commands.ConfigurationCommand"
+            name="Configuration Command">
+      </command>
+      <command
+            categoryId="org.consensus.config.commands.category"
+            id="org.consensus.config.commands.CompileCommand"
+            name="Compile Command">
+      </command>
+      <command
+            categoryId="org.consensus.config.commands.category"
+            id="org.consensus.config.commands.SolverCommand"
+            name="Solver Command">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.consensus.config.handlers.SampleHandler"
+            commandId="org.consensus.config.commands.sampleCommand">
+      </handler>
+      <handler
+            class="org.consensus.config.handlers.ConfigurationHandler"
+            commandId="org.consensus.config.commands.ConfigurationCommand">
+      </handler>
+      <handler
+            class="org.consensus.config.handlers.CompileHandler"
+            commandId="org.consensus.config.commands.CompileCommand">
+      </handler>
+      <handler
+            class="org.consensus.config.handlers.SolverHandler"
+            commandId="org.consensus.config.commands.SolverCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.consensus.config.commands.sampleCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.consensus.config.toolbars.sampleToolbar">
+            <command
+                  id="org.consensus.config.toolbars.ConfigurationCommand"
+                  commandId="org.consensus.config.commands.ConfigurationCommand"
+                  icon="icons/config.png"
+                  tooltip="Configuration">
+            </command>
+            <command
+                  commandId="org.consensus.config.commands.CompileCommand"
+                  icon="icons/compiler.png"
+                  id="org.consensus.config.toolbars.CompileCommand"
+                  tooltip="Translate">
+            </command>
+            <command
+                  commandId="org.consensus.config.commands.SolverCommand"
+                  icon="icons/solver.png"
+                  id="org.consensus.config.toolbars.SolverCommand"
+                  tooltip="Solve">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+   </extension>
+
+</plugin>

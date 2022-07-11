@@ -1,0 +1,327 @@
+package org.consensus.config.handlers;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.consensus.config.handlers.Config;
+
+public class ConfigurationHandler extends AbstractHandler {
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display); // 创建窗口对象
+    	shell.setText("HO-Ext Configuration");
+        shell.setSize(800, 600); // 设置窗口大小
+        shell.open();
+        Button openButton = new Button(shell, SWT.NONE);
+        openButton.setText("Open");
+        openButton.setBounds(10, 10, 150, 25);
+        openButton.addSelectionListener(new SelectionAdapter() {
+        	public void widgetSelected(SelectionEvent e) {
+        		FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+                dialog.setFilterPath("D:\\");
+                String result = dialog.open();
+                System.out.println(result);
+        	}
+        });
+        
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+        display.dispose();
+		return null;
+	}
+	
+	public static void set_basic(Shell shell) {
+		Group basic_group = new Group(shell, SWT.NONE);
+		basic_group.setBounds(20, 20, 580, 130);
+		basic_group.setText("Basic Configuration");
+		
+		Label textLabel1 = new Label(basic_group, SWT.NONE);
+		textLabel1.setText("HO-Ext file:");
+		textLabel1.setBounds(20, 30, 100, 30);
+		
+		Label textLabel2 = new Label(basic_group, SWT.NONE);
+		textLabel2.setText("Config path:");
+		textLabel2.setBounds(20, 60, 100, 30);
+		
+		Label textLabel3 = new Label(basic_group, SWT.NONE);
+		textLabel3.setText("Output path:");
+		textLabel3.setBounds(20, 90, 100, 30);
+		
+		Text HO_input = new Text(basic_group, SWT.BORDER);
+		HO_input.setBounds(120, 30, 340, 25);
+		
+		Text Config_input = new Text(basic_group, SWT.BORDER);
+		Config_input.setBounds(120, 60, 340, 25);
+		
+		Text Output_input = new Text(basic_group, SWT.BORDER);
+		Output_input.setBounds(120, 90, 340, 25);
+		
+		Button HO_button = new Button(basic_group, SWT.PUSH);
+		HO_button.setText("Browse...");
+		HO_button.setBounds(480, 30, 80, 25);
+		HO_button.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(SelectionEvent e) {
+	    	FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+	    	dialog.setFilterPath("D:\\");
+	    	String result = dialog.open();
+	    	HO_input.setText(result);
+	    	}
+	    });
+		
+		Button Config_button = new Button(basic_group, SWT.PUSH);
+		Config_button.setText("Browse...");
+		Config_button.setBounds(480, 60, 80, 25);
+		Config_button.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(SelectionEvent e) {
+	    	DirectoryDialog  dialog = new DirectoryDialog (shell);
+	    	dialog.setFilterPath("D:\\");
+	    	String result = dialog.open();
+	    	Config_input.setText(result);
+	    	}
+	    });
+		
+		Button Output_button = new Button(basic_group, SWT.PUSH);
+		Output_button.setText("Browse...");
+		Output_button.setBounds(480, 90, 80, 25);
+		Output_button.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(SelectionEvent e) {
+	    	DirectoryDialog  dialog = new DirectoryDialog (shell);
+	    	dialog.setFilterPath("D:\\");
+	    	String result = dialog.open();
+	    	Output_input.setText(result);
+	    	}
+	    });
+	}
+	
+	public static void set_compiler(Shell shell) {
+		Config config=Config.getConfig();
+		Group config_group = new Group(shell, SWT.NONE);
+		config_group.setBounds(20, 160, 580, 165);
+		config_group.setText("Compiler Configuration");
+		
+		
+		Group node_group = new Group(config_group, SWT.NONE);
+		node_group.setText("Node Number");
+		node_group.setBounds(40, 20, 140, 130);
+		
+		Label textLabel1 = new Label(node_group, SWT.NONE);
+		textLabel1.setText("MIN:");
+		textLabel1.setBounds(20, 45, 40, 30);
+		Text min_input = new Text(node_group, SWT.BORDER);
+		min_input.setText(String.valueOf(config.getNode_num_MIN()));
+		min_input.setBounds(70, 45, 45, 25);
+		min_input.addVerifyListener(new VerifyListener() {
+		    @Override
+		    public void verifyText(VerifyEvent e) {
+		    	for(char c:e.text.toCharArray()) {
+		    		if (!Character.isDigit(c)) { // 0-9禁止输入
+		                e.doit = false;
+		            }
+		    	}
+		    }
+		});
+		min_input.addModifyListener(new ModifyListener() {
+		    @Override
+		    public void modifyText(ModifyEvent e) {
+		        try {
+		        	config.setNode_num_MIN(Integer.parseInt(min_input.getText()));
+		        	System.out.println("Node_num_MIN:"+min_input.getText());
+		        }
+		        catch (NumberFormatException err) {
+		        	err.printStackTrace();
+		        }
+		    }
+		});
+		
+		
+		Label textLabel2 = new Label(node_group, SWT.NONE);
+		textLabel2.setText("MAX:");
+		textLabel2.setBounds(20, 82, 40, 30);
+		Text max_input = new Text(node_group, SWT.BORDER);
+		max_input.setText(String.valueOf(config.getNode_num_MAX()));
+		max_input.setBounds(70, 82, 45, 25);
+		max_input.addVerifyListener(new VerifyListener() {
+		    @Override
+		    public void verifyText(VerifyEvent e) {
+		    	for(char c:e.text.toCharArray()) {
+		    		if (!Character.isDigit(c)) { // 0-9禁止输入
+		                e.doit = false;
+		            }
+		    	}
+		    }
+		});
+		max_input.addModifyListener(new ModifyListener() {
+		    @Override
+		    public void modifyText(ModifyEvent e) {
+		        try {
+		        	config.setNode_num_MAX(Integer.parseInt(max_input.getText()));
+		        	System.out.println("Node_num_MAX:"+max_input.getText());
+		        }
+		        catch (NumberFormatException err) {
+		        	err.printStackTrace();
+		        }
+		    }
+		});
+		
+		
+		Group format_group = new Group(config_group, SWT.NO_RADIO_GROUP);
+		format_group.setText("Output Format");
+		format_group.setBounds(220, 20, 140, 130);
+		
+		Button SMT_button = new Button(format_group, SWT.RADIO);
+		SMT_button.setText("SMT");
+		SMT_button.setBounds(30, 30, 105, 30);
+		SMT_button.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e){
+				if(SMT_button.getSelection()) {
+					config.setGen_SMT(true);
+					System.out.println("Gen SMT: true");
+				}
+				else {
+					config.setGen_SMT(false);
+					System.out.println("Gen SMT: false");
+				}
+			}
+			
+		});
+		Button SMT_bv_button = new Button(format_group, SWT.RADIO);
+		SMT_bv_button.setText("SMT-BV");
+		SMT_bv_button.setBounds(30, 60, 105, 30);
+		Button SAT_button = new Button(format_group, SWT.RADIO);
+		SAT_button.setText("SAT");
+		SAT_button.setBounds(30, 90, 105, 30);
+		
+		Group property_group = new Group(config_group, SWT.NO_RADIO_GROUP);
+		property_group.setText("Property");
+		property_group.setBounds(400, 20, 140, 130);
+		
+		Button Invariant_button = new Button(property_group, SWT.RADIO);
+		Invariant_button.setText("Invariant");
+		Invariant_button.setBounds(20, 30, 110, 30);
+		Button Univalence_button = new Button(property_group, SWT.RADIO);
+		Univalence_button.setText("Univalence");
+		Univalence_button.setBounds(20, 60, 110, 30);
+		Button Agreement_button = new Button(property_group, SWT.RADIO);
+		Agreement_button.setText("Agreement");
+		Agreement_button.setBounds(20, 90, 110, 30);
+		
+		
+	}
+	
+	public static void set_solver(Shell shell) {
+		Group config_group = new Group(shell, SWT.NONE);
+		config_group.setBounds(20, 335, 580, 320);
+		config_group.setText("Solver Configuration");
+		Label horizontalLabel = new Label(config_group,SWT.HORIZONTAL | SWT.SEPARATOR);
+		horizontalLabel.setBounds(20, 165, 540, 2);
+		
+		
+		Composite mode_comp = new Composite(config_group, SWT.NONE);
+		mode_comp.setBounds(40, 30, 140, 270);
+		Button radioButton1 = new Button(mode_comp, SWT.RADIO);
+		radioButton1.setText("SMT MODE");
+		radioButton1.setBounds(10, 55, 120, 20);
+		Button radioButton2 = new Button(mode_comp, SWT.RADIO);
+		radioButton2.setText("SAT MODE");
+		radioButton2.setBounds(10, 205, 120, 20);
+		
+		//SMT MODE
+		Group SMT_solver_group = new Group(config_group, SWT.NONE);
+		SMT_solver_group.setText("SMT Solver");
+		SMT_solver_group.setBounds(220, 20, 140, 130);
+		
+		Button Z3_button = new Button(SMT_solver_group, SWT.RADIO);
+		Z3_button.setText("Z3");
+		Z3_button.setBounds(30, 30, 105, 30);
+		Button CVC4_button = new Button(SMT_solver_group, SWT.RADIO);
+		CVC4_button.setText("CVC4");
+		CVC4_button.setBounds(30, 60, 105, 30);
+		Button Alt_button = new Button(SMT_solver_group, SWT.RADIO);
+		Alt_button.setText("Alt-ergo");
+		Alt_button.setBounds(30, 90, 105, 30);
+		
+		
+		//SAT MODE
+		Group SAT_solver_group = new Group(config_group, SWT.NONE);
+		SAT_solver_group.setText("SAT Solver");
+		SAT_solver_group.setBounds(220, 175, 140, 130);
+		
+		Button Glucose_button = new Button(SAT_solver_group, SWT.RADIO);
+		Glucose_button.setText("Glucose");
+		Glucose_button.setBounds(30, 30, 105, 30);
+		Button Minisat_button = new Button(SAT_solver_group, SWT.RADIO);
+		Minisat_button.setText("Minisat");
+		Minisat_button.setBounds(30, 60, 105, 30);
+		
+		Group mode_group = new Group(config_group, SWT.None);
+		mode_group.setText("Mode");
+		mode_group.setBounds(400, 175, 140, 130);
+		
+		Button Invariant_button = new Button(mode_group, SWT.RADIO);
+		Invariant_button.setText("Serial");
+		Invariant_button.setBounds(20, 30, 110, 30);
+		Button Univalence_button = new Button(mode_group, SWT.RADIO);
+		Univalence_button.setText("Parallel");
+		Univalence_button.setBounds(20, 60, 110, 30);
+		
+		Label textLabel1 = new Label(mode_group, SWT.NONE);
+		textLabel1.setText("Level:");
+		textLabel1.setBounds(20, 90, 45, 30);
+		Text min_input = new Text(mode_group, SWT.BORDER);
+		min_input.setBounds(75, 90, 45, 25);
+		
+		Z3_button.setEnabled(false);
+		CVC4_button.setEnabled(false);
+		Alt_button.setEnabled(false);
+		
+		
+	}
+
+	
+	public static void main(String[] args) {
+		Config config=Config.getConfig();
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display); // 创建窗口对象
+		shell.setText("HO-Ext Configuration");
+		shell.setSize(640, 720); // 设置窗口大小
+		
+		//set_basic(shell);
+		set_compiler(shell);
+		//set_solver(shell);
+        
+        
+        
+        shell.open();
+        
+        
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+        display.dispose();
+	}
+}

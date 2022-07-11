@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Display"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Shell"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.FileDialog"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.SWT"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.events.SelectionAdapter"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Button"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.events.SelectionEvent"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Composite"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Group"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.layout.FillLayout"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Label"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.Text"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.DirectoryDialog"/>
+    <fullyQualifiedTypeName name="java.io.File"/>
+    <fullyQualifiedTypeName name="java.io.BufferedWriter"/>
+    <fullyQualifiedTypeName name="java.io.FileWriter"/>
+    <fullyQualifiedTypeName name="com.alibaba.fastjson.JSONException"/>
+    <fullyQualifiedTypeName name="java.io.FileReader"/>
+    <fullyQualifiedTypeName name="org.consensus.config.handlers.ConfigurationHandler"/>
+    <fullyQualifiedTypeName name="org.consensus.config.handlers.ConfigShell"/>
+    <fullyQualifiedTypeName name="com.alibaba.fastjson.JSONObject"/>
+    <fullyQualifiedTypeName name="com.alibaba.fastjson.serializer.SerializerFeature"/>
+    <fullyQualifiedTypeName name="com.alibaba.fastjson.JSON"/>
+    <fullyQualifiedTypeName name="com.google.gson.Gson"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="com.google.gson.GsonBuilder"/>
+    <fullyQualifiedTypeName name="com.google.gson.reflect.TypeToken"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.widgets.MessageBox"/>
+    <fullyQualifiedTypeName name="org.consensus.config.handlers.CompileShell"/>
+    <fullyQualifiedTypeName name="org.eclipse.swt.graphics.Image"/>
+    <fullyQualifiedTypeName name="java.io.BufferedReader"/>
+    <fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="java.io.InputStream"/>
+    <fullyQualifiedTypeName name="java.io.IOException"/>
+    <fullyQualifiedTypeName name="org.consensus.config.handlers.Solver"/>
+</qualifiedTypeNameHistroy>

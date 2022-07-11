@@ -1,0 +1,120 @@
+package org.consensus.config.handlers;
+
+
+public class Config {
+	private static Config instance; 
+	
+	private String HO_file="";
+	private String Config_path="";
+	private String Output_path="";
+	
+	private boolean gen_SMT=false;
+	private boolean gen_SMT_bv=false;
+	private boolean gen_SAT=false;
+	
+	private boolean gen_agreement=false;
+	private boolean gen_univalence=false;
+	private boolean gen_invariant=false;
+	
+	private int node_num_MIN=3;
+	private int node_num_MAX=8;
+	
+	
+	
+	public String getHO_file() {
+		return HO_file;
+	}
+
+	public String getConfig_path() {
+		return Config_path;
+	}
+
+	public String getOutput_path() {
+		return Output_path;
+	}
+
+	public boolean isGen_SMT() {
+		return gen_SMT;
+	}
+
+	public boolean isGen_SMT_bv() {
+		return gen_SMT_bv;
+	}
+
+	public boolean isGen_SAT() {
+		return gen_SAT;
+	}
+
+	public boolean isGen_agreement() {
+		return gen_agreement;
+	}
+
+	public boolean isGen_univalence() {
+		return gen_univalence;
+	}
+
+	public boolean isGen_invariant() {
+		return gen_invariant;
+	}
+
+	public int getNode_num_MIN() {
+		return node_num_MIN;
+	}
+
+	public int getNode_num_MAX() {
+		return node_num_MAX;
+	}
+
+	public void setHO_file(String hO_file) {
+		HO_file = hO_file;
+	}
+
+	public void setConfig_path(String config_path) {
+		Config_path = config_path;
+	}
+
+	public void setOutput_path(String output_path) {
+		Output_path = output_path;
+	}
+
+	public void setGen_SMT(boolean gen_SMT) {
+		this.gen_SMT = gen_SMT;
+	}
+
+	public void setGen_SMT_bv(boolean gen_SMT_bv) {
+		this.gen_SMT_bv = gen_SMT_bv;
+	}
+
+	public void setGen_SAT(boolean gen_SAT) {
+		this.gen_SAT = gen_SAT;
+	}
+
+	public void setGen_agreement(boolean gen_agreement) {
+		this.gen_agreement = gen_agreement;
+	}
+
+	public void setGen_univalence(boolean gen_univalence) {
+		this.gen_univalence = gen_univalence;
+	}
+
+	public void setGen_invariant(boolean gen_invariant) {
+		this.gen_invariant = gen_invariant;
+	}
+
+	public void setNode_num_MIN(int node_num_MIN) {
+		this.node_num_MIN = node_num_MIN;
+	}
+
+	public void setNode_num_MAX(int node_num_MAX) {
+		this.node_num_MAX = node_num_MAX;
+	}
+
+	private Config() {}
+	
+	public static synchronized Config getConfig () {
+		if(instance == null)
+			instance= new Config();
+		return instance;
+	}
+
+}
