@@ -1,0 +1,63 @@
+Algorithm UniformVoting;
+Variable
+	V x = Vp;
+	V' vote = ?;
+	hidden V tmpX,minX;
+	hidden int i, cnt;
+	hidden bool flag;
+Domain{
+	assert(ASIZE==0);
+};
+Round {
+	SendPart
+		send(<x>, All);
+	TransitionPart
+		flag=true;
+		minX=rcv[1].x;
+		for[i = 2 to N ]{
+			if(rcv[i].x < minX)
+				minX=rcv[i].x;
+			if(rcv[i].x!=minX)
+				flag=false;
+		};
+		if(minX != NULL)
+			x=minX;
+		if(flag==true)
+			vote=minX;
+};
+Round{
+	SendPart
+		send(<x,vote>, All);
+	TransitionPart
+		cnt=0;
+		flag=false;
+		for[i = 1 to N]{
+			if(rcv[i].vote!=NULL && rcv[i].vote!=?){
+				x=rcv[i].vote;
+				flag=true;
+				if(rcv[i].vote==rcv[1].vote)
+					cnt=cnt+1;
+			};
+		};
+		if(flag==false){
+			minX=rcv[1].x;minX=rcv[1].x;
+			for[i = 2 to N ]{
+				if(rcv[i].x < minX)
+					minX=rcv[i].x;
+			};
+			if(minX!=NULL)
+				x=minX;
+		};
+		if(cnt==N)
+			DECIDE(rcv[1].vote);
+		vote=?;
+};
+
+Invariant{
+	for[i= 1 to N]
+		assume(vote[i]==?);
+};
+Univalence{
+	for[i= 1 to N]
+		assert(x[i]==v);
+};

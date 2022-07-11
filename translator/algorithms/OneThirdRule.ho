@@ -1,0 +1,62 @@
+Algorithm OneThirdRule;
+Variable
+	V x = Vp;
+	hidden V tmpX;
+	hidden VArray sortedX;
+	hidden int i, j;
+Domain{
+	assert(SIZE==SSIZE);
+};
+
+Round {
+	SendPart
+		send(<x>, All);
+	TransitionPart
+		if (SIZE > 2*N/3) {
+			for [ i = 1 to N ] {
+				sortedX[i] = rcv[i].x;
+				cntX[i]=1;
+			};
+			for [ i = 1 to N - 1 ] {
+				for [ j = 1 to N - i ] {
+					if ( sortedX[j] == NULL || (sortedX[j+1]!=NULL && sortedX[j]>sortedX[j+1]) ) {
+						tmpX = sortedX[j];
+						sortedX[j] = sortedX[j+1];
+						sortedX[j+1] = tmpX;
+					};
+				};
+			};
+			tmpX=sortedX[1];
+			maxcnt=1;
+			for[ i= 2 to N ] {
+				if( sortedX[i]!= NULL && sortedX[i]==sortedX[i-1]){
+					cntX[i]=cntX[i-1]+1;
+					if(cntX[i]>maxcnt){
+						maxcnt=cntX[i];
+						tmpX=sortedX[i];
+					};
+				};
+			};
+			x=tmpX;
+			if(maxcnt>2*N/3)
+				DECIDE(x);
+		};
+};
+
+Univalence {
+	for [ i = 1 to N ] {
+			sortedX[i] = x[i];
+		};
+	j = 1;
+	for [ i = 1 to N - 1 ] {
+		if(sorted[i+1] == v){
+			tmpX = sortedX[j];
+			sortedX[j] = sortedX[i];
+			sortedX[i] = tmpX;
+			j = j + 1 ;
+		};
+	};
+	for [ i = 1 to N] {
+		assert( sortedX[i]==v || i>2*N/3+1 );
+	};
+};

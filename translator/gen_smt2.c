@@ -113,18 +113,14 @@ static void gen_v_dec() {
 
 	// System-defined variables
 	str_append(&outbuf, ";; system define\n");
-	//str_append(&outbuf,
-	//		"(define dv::(-> process round int int))  ; decision value\n"); // Decision values
+
 	str_append(&outbuf, "(declare-fun dv (process round Int) Int)  ; decision value\n");
 	if (coord_flag) 
-	//str_append(&outbuf,
-	//		"(define coord::(-> process%s int))  ; coordinator\n",
-	//		phase > 1 ? " int" : ""); // Coordinators
+
 	str_append(&outbuf, "(declare-fun coord (process%s) Int)  ; coordinator\n",phase > 1 ? " int" : "");
-	//str_append(&outbuf, "(define phase::int)  ; phase number\n"); // Phase number
+
 	str_append(&outbuf, "(declare-const phase Int)  ; phase number\n");
-	//str_append(&outbuf,
-	//		"(define rcv::(-> process round int data)) ; received data\n"); // Received messages
+
 	str_append(&outbuf, "(declare-fun rcv (process round Int) data); received data\n");
 
 	//str_append(&outbuf, "(define-fun size::(-> process round int)\n"); // Number of received messages
@@ -199,7 +195,7 @@ static void gen_domain(){
 	// Initialization of process variables
 	str_append(&outbuf, "; initialization\n");
 	for (i = 1; i <= n; i++) {
-		//str_append(&outbuf, "(define _value%d::int)\n", i);
+
 		str_append(&outbuf, "(declare-const _value%d Int)\n", i);
 	}
 	str_append(&outbuf, "(assert (and\n");
@@ -246,8 +242,7 @@ static void gen_round() {
 	gettokn(); /* "{" */
 	gettokn(); /* "SendPart" */
 	str_append(&outbuf, "; round%d definition\n", curr_round);
-	//str_append(&outbuf, "(define round%d::(-> process int int bool)\n",
-	//		curr_round);
+
 	str_append(&outbuf,"(define-fun round%d ((_proc process) (_pid Int) (_phase Int)) Bool\n",curr_round);
 	str_append(&outbuf,
 			"  (and\n");
@@ -364,8 +359,7 @@ static void gen_s_part() {
 			str_append(&outbuf, "true\n");
 		}
 		str_append(&outbuf, "      true\n");
-		//str_append(&outbuf, "      (= (select (rcv _proc r%d %d) 1) 0)\n",
-		//		curr_round, pid);
+
 		str_append(&outbuf, "      (= (rcv_ack (rcv _proc r%d %d) ) false)\n",curr_round, pid);
 		str_append(&outbuf, "    )\n");
 
@@ -469,19 +463,14 @@ static void gen_inv() {
 	gettokn(); /* "{" */
 
 	str_append(&outbuf, "; Constraints for INV\n");
-	//str_append(&outbuf, "(define inv::(-> process round int bool)\n");
-	//str_append(&outbuf,
-	//		"  (lambda (_proc::process _r::round _phase::int) (and\n");
+
 	str_append(&outbuf,"(define-fun inv ((_proc process) (_r round) (_phase Int)) Bool (and\n");
 	str_append(&outbuf, "    true\n");
 	gen_stmt_rep(&outbuf, INV_MODE); /* Encode statements */
 	str_append(&outbuf, "  )\n");
 	str_append(&outbuf, ")\n");
 	str_append(&outbuf, ";; Assumptions for INV\n");
-	//str_append(&outbuf,
-	//		"(define inv_assumptions::(-> process round int bool)\n");
-	//str_append(&outbuf,
-	//		"  (lambda (_proc::process _r::round _phase::int) (and\n");
+
 	str_append(&outbuf,"(define-fun inv_assumptions ((_proc process) (_r round) (_phase Int)) Bool (and\n");
 	str_append(&outbuf, assumption);
 	str_append(&outbuf, "  )\n");
@@ -511,16 +500,14 @@ static void gen_uni() {
 
 	str_append(&outbuf, "; Constraints for Agr\n");
 	str_append(&outbuf, "(declare-const _v Int)\n");
-	//str_append(&outbuf, "(define univ::(-> process round bool)\n");
-	//str_append(&outbuf, "  (lambda (_proc::process _r::round) (and\n");
+
 	str_append(&outbuf,"(define-fun univ ((_proc process) (_r round)) Bool (and\n");
 	str_append(&outbuf, "    true\n");
 	gen_stmt_rep(&outbuf, UNI_MODE); /* Encode statements */
 	str_append(&outbuf, "  )\n");
 	str_append(&outbuf, ")\n");
 	str_append(&outbuf, ";; Assertions for Agr\n");
-	//str_append(&outbuf, "(define univ_assertions::(-> process round bool)\n");
-	//str_append(&outbuf, "  (lambda (_proc::process _r::round) (and\n");
+
 	str_append(&outbuf,"(define-fun univ_assertions ((_proc process) (_r round)) Bool (and\n");
 	str_append(&outbuf, assertion);
 	str_append(&outbuf, "  )\n");
@@ -551,8 +538,7 @@ static void gen_uni() {
 		str_append(&outbuf, ")\n");
 		str_append(&outbuf,
 				";; if some process decided, then all processes must obey \"univ\"\n");
-		//str_append(&outbuf, "(assert (=> (/= _v 0) (univ p1 r%d)))\n\n",
-		//		round_count + 1);
+
 		str_append(&outbuf, "(assert (=> (not (= _v 0)) (univ p1 r%d)))\n\n",round_count + 1);
 		str_append(&outbuf, "; Not Agr\n");
 		str_append(&outbuf, "(assert (not (or\n");
@@ -992,13 +978,9 @@ static void gen_factor(char **buff, int mode) {
 		gettokn(); /* "." */
 		gettokn();
 		if (token.kind == SCOORD) {
-			//str_append(buff, "(select (rcv _proc r%d %s) 2)", curr_round,
-			//		expression);
 			str_append(buff, "(rcv_coord (rcv _proc r%d %s) 2)", curr_round,expression);
 		} else if (token.kind == SIDENTIFIER && (v = search_variable(token.id))
 				!= NULL && v->isMessage) {
-			//str_append(buff, "(select (rcv _proc r%d %s) %d)", curr_round,
-			//		expression, v->other_field);
 			str_append(buff, "(rcv_%s (rcv _proc r%d %s) )", v->name,curr_round,expression);
 		}
 		free(expression);
@@ -1094,7 +1076,7 @@ void wrt_definitions() {
 
 	str_append(&outbuf, "; type dec\n");
 	// Process
-	//str_append(&outbuf, "(define-type process (scalar p1");
+
 	//(declare-datatypes () ((S A B C)))
 	//(declare-datatypes ( (process 0) ) ( (p1 p2 p3) ) )
 	str_append(&outbuf, "(declare-datatypes ( (process 0) ) ( ((p1)");
@@ -1103,13 +1085,12 @@ void wrt_definitions() {
 	}
 	str_append(&outbuf, ") ) )\n");
 	// Round
-	//str_append(&outbuf, "(define-type round (scalar r1");
+
 	str_append(&outbuf, "(declare-datatypes ( (round 0) ) ( ((r1)");
 	for (i = 2; i <= round_count; i++) {
 		str_append(&outbuf, " (r%d)", i);
 	}
 	str_append(&outbuf, " (r%d)) ) )\n", round_count + 1);
-	//str_append(&outbuf, "(define-type boolean (subrange 0 1))\n");	//Bool true false
 	
 	// Message table
 	str_append(&outbuf, ";; TABLE is [ack, safe");
@@ -1119,7 +1100,6 @@ void wrt_definitions() {
 				p->name);
 	}
 	str_append(&outbuf, "]\n");
-	//str_append(&outbuf, "(define-type data (tuple boolean");
 	//(declare-datatypes ( (data 0) ) ( ( ( data (rcv_ack Bool) (rcv_safe Bool) (rcv_coord Int) (rcv_x Int) (rcv_vote Int) (rcv_ts Int) ))))  ;tuple
 	str_append(&outbuf, "(declare-datatypes ( (data 0) ) ( ( ( data (rcv_ack Bool) (rcv_safe Bool)");
 	//(declare-datatypes () ((data (mk-data (ack Bool) (safe Bool) (coord Int) (x Int) (vote Int) (ts Int)))))

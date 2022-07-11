@@ -1,0 +1,79 @@
+Algorithm UTEa;
+Variable
+	V x = Vp;
+	V' vote = ?;
+	hidden V tmpX;
+	hidden VArray sortedX;
+	hidden int i,j;
+Domain{
+	assert(E<N&&E>=N/2+a);
+	assert(T<N&&T>=N/2+a);
+	assert(ASIZE<=a);
+	assert(SSIZE>N+2*a-E-1&&SSIZE>T&&SSIZE>a);
+};
+Round {
+	SendPart
+		send(<x>, All);
+	TransitionPart
+		maxcnt=1;
+		tmpX = NULL;
+		for[ i = 1 to N-1 ] {
+			cnt=1;
+			for[ j = i+1 to N ] {
+				if(rcv[j].x==rcv[i].x && rcv[i].x!=NULL){
+					cnt=cnt+1;
+					if(cnt>maxcnt){
+						maxcnt=cnt;
+						tmpX=rcv[i].x;
+					};
+				};
+			};
+		};
+		if(maxcnt>T&&tmpX != NULL)
+			vote=tmpX;
+};
+Round{
+	SendPart
+		send(<vote>, All);
+	TransitionPart
+		maxcnt=1;
+		tmpX=NULL;
+		for[ i = 1 to N-1 ] {
+			cnt=1;
+			for[ j = i+1 to N] {
+				if(rcv[j].vote==rcv[i].vote&&rcv[i].vote!=NULL&&rcv[i].vote!=?){
+					cnt=cnt+1;
+					if(cnt>maxcnt){
+						maxcnt=cnt;
+						tmpX=rcv[i].vote;
+					};
+				};
+			};
+		};
+		if(maxcnt>=a+1&&tmpX!=NULL)
+			x=tmpX;
+		if(maxcnt>E&&tmpX!=NULL)
+			DECIDE(tmpX);
+		vote=?;
+};
+Invariant {
+	for[i = 1 to N]
+		assume(vote[i]==?);
+};
+Univalence{
+	for [ i = 1 to N ] {
+			sortedX[i] = x[i];
+		};
+	j = 1;
+	for [ i = 1 to N - 1 ] {
+		if(sorted[i+1] == v){
+			tmpX = sortedX[j];
+			sortedX[j] = sortedX[i];
+			sortedX[i] = tmpX;
+			j = j + 1 ;
+		};
+	};
+	for [ i = 1 to N] {
+		assert( sortedX[i]==v || (i>E+1 && i>T+1) );
+	};
+};
